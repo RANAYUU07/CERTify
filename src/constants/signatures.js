@@ -1,0 +1,102 @@
+// SQL Injection patterns
+export const SQL_INJECTION_PATTERNS = [
+  /union\s+select/i,
+  /'\s*or\s+'?1'?\s*=\s*'?1/i,
+  /'\s*or\s+1\s*=\s*1/i,
+  /--\s*$/i,
+  /drop\s+table/i,
+  /insert\s+into/i,
+  /sleep\s*\(/i,
+  /benchmark\s*\(/i,
+  /xp_cmdshell/i,
+  /exec\s*\(/i,
+  /cast\s*\(/i,
+  /convert\s*\(/i,
+  /char\s*\(\s*\d/i,
+  /information_schema/i,
+  /load_file\s*\(/i,
+  /outfile\s+'/i,
+  /waitfor\s+delay/i,
+]
+
+// Path Traversal patterns
+export const PATH_TRAVERSAL_PATTERNS = [
+  /\.\.\//,
+  /\.\.\\/,
+  /\/etc\/passwd/i,
+  /\/etc\/shadow/i,
+  /\/windows\/system32/i,
+  /%2e%2e%2f/i,
+  /%2e%2e\//i,
+  /\.\.%2f/i,
+  /%252e%252e/i,
+  /\/proc\/self/i,
+]
+
+// XSS patterns
+export const XSS_PATTERNS = [
+  /<script/i,
+  /<\/script>/i,
+  /onerror\s*=/i,
+  /onload\s*=/i,
+  /onclick\s*=/i,
+  /onmouseover\s*=/i,
+  /alert\s*\(/i,
+  /confirm\s*\(/i,
+  /prompt\s*\(/i,
+  /javascript:/i,
+  /vbscript:/i,
+  /data:text\/html/i,
+  /<img[^>]+src[^>]+onerror/i,
+  /document\.cookie/i,
+  /document\.write/i,
+]
+
+// Command Injection patterns
+export const COMMAND_INJECTION_PATTERNS = [
+  /;\s*ls/i,
+  /\|\s*whoami/i,
+  /&&\s*cat/i,
+  /\$\(/,
+  /`[^`]+`/,
+  /\|nc\s/i,
+  /\|bash/i,
+  /;\s*id\b/i,
+  /;\s*pwd\b/i,
+  /\|\s*id\b/i,
+  /&&\s*ls/i,
+  /;\s*wget/i,
+  /;\s*curl/i,
+]
+
+// Known malicious / suspicious User-Agents
+export const MALICIOUS_USER_AGENTS = [
+  /sqlmap/i,
+  /nikto/i,
+  /nmap/i,
+  /masscan/i,
+  /dirbuster/i,
+  /gobuster/i,
+  /wfuzz/i,
+  /hydra/i,
+  /medusa/i,
+  /zgrab/i,
+  /nuclei/i,
+  /metasploit/i,
+  /burpsuite/i,
+  /openvas/i,
+  /nessus/i,
+  /acunetix/i,
+  /appscan/i,
+  /webinspect/i,
+  /havij/i,
+  /libwww-perl/i,
+  /lwp-trivial/i,
+  /python-requests\/[0-9]/i,
+  /go-http-client/i,
+  /curl\/[0-9]/i,
+  /wget\/[0-9]/i,
+  /scrapy/i,
+  /semrush/i,
+  /ahrefsbot/i,
+]
