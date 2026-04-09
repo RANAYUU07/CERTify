@@ -132,33 +132,38 @@ export default function LogUploader() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero section */}
-      <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-24 pb-16 overflow-hidden">
-        <FadeIn className="relative z-10">
-          <FadeIn>
-            <h1 className="text-hero font-bold uppercase tracking-tighter leading-[0.85] mb-4">
-              <span className="text-foreground block">CERTIFY</span>
-              <span className="text-accent block">THREAT</span>
-              <span className="text-foreground block">ANALYZER</span>
-            </h1>
-          </FadeIn>
+      <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-6 md:px-12 pt-24 pb-16 overflow-hidden">
+        <FadeIn className="relative z-10 w-full">
+          <div className="max-w-6xl mx-auto">
+            <FadeIn>
+              <h1 className="font-bold uppercase tracking-tighter leading-[0.90] mb-3 text-[clamp(4.90rem,13vw,12.5rem)]">
+                <span className="text-foreground block">CERTIFY</span>
+                <span className="text-accent block">THREAT</span>
+                <span className="text-foreground block">ANALYZER</span>
+              </h1>
+            </FadeIn>
 
-          <FadeIn delay={200}>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-tight mt-6">
-              Zero-backend cyberattack detection. Upload Apache or Nginx logs, detect threats across 3 analysis layers, and generate CERT-In compliant incident reports — entirely in your browser. No data leaves your device.
-            </p>
-          </FadeIn>
+            <FadeIn delay={200}>
+              <p className="text-2xl md:text-2.9xl text-muted-foreground max-w-3xl mx-auto leading-tight mt-7">
+                Zero-backend cyberattack detection. Upload Apache or Nginx logs, detect threats across 3 analysis layers, and generate CERT-In compliant incident reports — entirely in your browser. No data leaves your device.
+              </p>
+            </FadeIn>
+          </div>
 
           {/* Stats row */}
-          <FadeIn delay={400} className="flex gap-8 mt-10 border-t-2 border-border pt-8">
+          <FadeIn
+            delay={400}
+            className="w-full flex items-start justify-between mt-12 border-t-2 border-border pt-10 px-4 sm:px-10 md:px-20 lg:px-32"
+          >
             {[
               { num: '3', label: 'Detection Layers' },
               { num: '15+', label: 'Attack Signatures' },
               { num: '100%', label: 'Browser Only' },
               { num: '0', label: 'Data Leaves Device' },
             ].map(({ num, label }) => (
-              <div key={label} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-accent">{num}</div>
-                <div className="text-xs tracking-widest text-muted-foreground uppercase mt-1">{label}</div>
+              <div key={label} className="text-center flex-1 min-w-0">
+                <div className="text-4xl md:text-5xl font-bold text-accent">{num}</div>
+                <div className="text-sm tracking-widest text-muted-foreground uppercase mt-2">{label}</div>
               </div>
             ))}
           </FadeIn>
@@ -167,14 +172,14 @@ export default function LogUploader() {
 
       {/* Marquee — features strip */}
       <div className="border-y-2 border-border overflow-hidden bg-accent shrink-0">
-        <div className="animate-marquee h-16 items-center">
+        <div className="animate-marquee h-36 items-center">
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-4 px-12 text-sm md:text-base font-bold tracking-widest uppercase text-accent-foreground"
+              className="inline-flex items-center gap-4 px-12 text-2xl md:text-3xl font-extrabold tracking-widest uppercase text-accent-foreground"
             >
               {item}
-              <span className="text-black/40 mx-2">·</span>
+              <span className="text-black/40 mx-4">·</span>
             </span>
           ))}
         </div>
@@ -183,7 +188,7 @@ export default function LogUploader() {
       {/* Upload zone */}
       <section className="px-6 md:px-12 py-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-display font-bold uppercase tracking-tighter leading-none mb-12">
+          <h2 className="text-display font-bold uppercase tracking-tighter leading-none mb-12 text-center">
             UPLOAD YOUR<br />
             <span className="text-accent">LOG FILE</span>
           </h2>
@@ -299,6 +304,86 @@ export default function LogUploader() {
           ))}
         </div>
       </section>
+
+      {/* Footer CTA */}
+      <footer className="border-t-2 border-border bg-accent text-black min-h-screen flex items-center">
+        <div className="w-full px-6 md:px-12 py-20 md:py-28">
+          <div className="max-w-6xl ml-0 mr-auto">
+            <h2 className="font-black uppercase tracking-tighter leading-[0.90] text-[clamp(4.90rem,13vw,12.5rem)]">
+              READY TO<br />
+              TRANSFORM<br />
+              YOUR<br />
+              WORKFLOW?
+            </h2>
+
+            <div className="mt-10 max-w-xl">
+              <label className="block text-sm font-bold uppercase tracking-widest text-black/70 mb-3">
+                Email address
+              </label>
+              <input
+                type="email"
+                inputMode="email"
+                placeholder=""
+                className="w-full bg-transparent border-b-2 border-black/70 focus:border-black outline-none py-3 text-lg placeholder:text-black/50"
+                aria-label="Email address"
+              />
+            </div>
+          </div>
+
+          {/* Footer links (centered block) */}
+          <div className="max-w-8xl mx-auto w-full">
+            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-20 md:gap-32 text-lg">
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest text-black/70 mb-4">Product</div>
+                <ul className="space-y-2 font-black uppercase tracking-wide">
+                  <li>Features</li>
+                  <li>Pricing</li>
+                  <li>Security</li>
+                  <li>Integrations</li>
+                  <li>Changelog</li>
+                </ul>
+              </div>
+
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest text-black/70 mb-4">Company</div>
+                <ul className="space-y-2 font-black uppercase tracking-wide">
+                  <li>About</li>
+                  <li>Blog</li>
+                  <li>Careers</li>
+                  <li>Contact</li>
+                </ul>
+              </div>
+
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest text-black/70 mb-4">Resources</div>
+                <ul className="space-y-2 font-black uppercase tracking-wide">
+                  <li>Documentation</li>
+                  <li>Help Center</li>
+                  <li>API Reference</li>
+                  <li>Community</li>
+                </ul>
+              </div>
+
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest text-black/70 mb-4">Legal</div>
+                <ul className="space-y-2 font-black uppercase tracking-wide">
+                  <li>Privacy Policy</li>
+                  <li>Terms of Service</li>
+                  <li>Cookie Policy</li>
+                  <li>GDPR</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-14 border-t border-black/30" />
+
+            <div className="pt-6 flex items-center justify-between text-[0.7rem] font-bold uppercase tracking-widest text-black/70">
+              <span>© 2026 CERTIFY. All rights reserved.</span>
+              <span className="text-black/80">CERTIFY</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
