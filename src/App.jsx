@@ -73,7 +73,7 @@ export default function App() {
           {/* Logo */}
           <button
             onClick={reset}
-            className="text-xl font-bold uppercase tracking-tighter text-accent mr-6 flex-shrink-0 hover:opacity-80 transition-opacity"
+            className="text-2xl md:text-3xl font-bold uppercase tracking-tighter text-accent mr-6 flex-shrink-0 hover:opacity-80 transition-opacity"
             aria-label="CERTify — go to home"
           >
             CERTIFY
