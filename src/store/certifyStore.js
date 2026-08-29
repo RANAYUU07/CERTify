@@ -16,12 +16,12 @@ import { MOCK_GEO_DATA } from '../constants/mockGeoData.js'
 const useCertifyStore = create((set, get) => ({
   // ─── Input ────────────────────────────────────────
   rawLogs: [],
-  fileName: '',
+  fileName: "",
   isDemoMode: false,
 
   // ─── Detection Results ────────────────────────────
   layer1Results: [],
-  layer2Results: [],       // behavioral + rotation combined
+  layer2Results: [], // behavioral + rotation combined
   layer2JsonSummary: null,
   geoData: {},
   mitreMappings: [],
@@ -32,22 +32,22 @@ const useCertifyStore = create((set, get) => ({
 
   // ─── UI State ─────────────────────────────────────
   isProcessing: false,
-  processingStep: '',
+  processingStep: "",
   processingStepIndex: 0,
   geoEnrichmentProgress: 0,
   geoLimited: false,
   hasResults: false,
-  activeTab: 'overview',
+  activeTab: "overview",
   toasts: [],
 
   // ─── AI ──────────────────────────────────────────
-  attackNarrative: '',
+  attackNarrative: "",
   certInEvidence: null,
   isGeneratingEvidence: false,
   isGeneratingNarrative: false,
   copilotMessages: [],
   isCopilotLoading: false,
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY || '',
+  apiKey: import.meta.env.VITE_GROQ_API_KEY || "",
 
   // ─── Actions ─────────────────────────────────────
 
@@ -55,92 +55,125 @@ const useCertifyStore = create((set, get) => ({
 
   setActiveTab: (tab) => set({ activeTab: tab }),
 
-  toggleFindingConfirmation: (id) => set(state => ({
-    confirmedFindings: {
-      ...state.confirmedFindings,
-      [id]: !state.confirmedFindings[id]
-    }
-  })),
+  toggleFindingConfirmation: (id) =>
+    set((state) => ({
+      confirmedFindings: {
+        ...state.confirmedFindings,
+        [id]: !state.confirmedFindings[id],
+      },
+    })),
 
-  addToast: (message, type = 'success') => {
-    const id = Date.now()
-    set(state => ({ toasts: [...state.toasts, { id, message, type }] }))
+  addToast: (message, type = "success") => {
+    const id = Date.now();
+    set((state) => ({ toasts: [...state.toasts, { id, message, type }] }));
     setTimeout(() => {
-      set(state => ({ toasts: state.toasts.filter(t => t.id !== id) }))
-    }, 3000)
+      set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
+    }, 3000);
   },
 
   reset: () => {
-    clearGeoCache()
+    clearGeoCache();
     set({
-      rawLogs: [], fileName: '', isDemoMode: false,
-      layer1Results: [], layer2Results: [], layer2JsonSummary: null,
-      geoData: {}, mitreMappings: [], ipDiversityRate: 0, parseWarnings: [],
-      isProcessing: false, processingStep: '', processingStepIndex: 0,
-      geoEnrichmentProgress: 0, geoLimited: false, hasResults: false,
-      activeTab: 'overview',
-      attackNarrative: '', certInEvidence: null,
-      isGeneratingEvidence: false, isGeneratingNarrative: false,
-      copilotMessages: [], isCopilotLoading: false,
-      playbookActions: [], confirmedFindings: {},
-    })
+      rawLogs: [],
+      fileName: "",
+      isDemoMode: false,
+      layer1Results: [],
+      layer2Results: [],
+      layer2JsonSummary: null,
+      geoData: {},
+      mitreMappings: [],
+      ipDiversityRate: 0,
+      parseWarnings: [],
+      isProcessing: false,
+      processingStep: "",
+      processingStepIndex: 0,
+      geoEnrichmentProgress: 0,
+      geoLimited: false,
+      hasResults: false,
+      activeTab: "overview",
+      attackNarrative: "",
+      certInEvidence: null,
+      isGeneratingEvidence: false,
+      isGeneratingNarrative: false,
+      copilotMessages: [],
+      isCopilotLoading: false,
+      playbookActions: [],
+      confirmedFindings: {},
+    });
   },
 
   loadDemoData: async () => {
-    await get().processLogs(null, true)
+    await get().processLogs(null, true);
   },
 
   processLogs: async (file, isDemoMode = false) => {
     const STEPS = [
-      'Parsing logs...',
-      'Running signature detection...',
-      'Behavioral analysis...',
+      "Parsing logs...",
+      "Running signature detection...",
+      "Behavioral analysis...",
       `Fetching geo data...`,
-      'Detecting IP rotation patterns...',
-      'Building evidence summary...',
-    ]
+      "Detecting IP rotation patterns...",
+      "Building evidence summary...",
+    ];
 
     set({
-      isProcessing: true, hasResults: false, isDemoMode,
-      processingStep: STEPS[0], processingStepIndex: 0,
-      layer1Results: [], layer2Results: [], geoData: {},
-      certInEvidence: null, attackNarrative: '', copilotMessages: [],
-    })
+      isProcessing: true,
+      hasResults: false,
+      isDemoMode,
+      processingStep: STEPS[0],
+      processingStepIndex: 0,
+      layer1Results: [],
+      layer2Results: [],
+      geoData: {},
+      certInEvidence: null,
+      attackNarrative: "",
+      copilotMessages: [],
+    });
 
     try {
       // ── Step 1: Parse logs ──
-      let content
-      let fileName
+      let content;
+      let fileName;
       if (isDemoMode) {
-        content = SAMPLE_LOG
-        fileName = SAMPLE_FILENAME
+        content = SAMPLE_LOG;
+        fileName = SAMPLE_FILENAME;
       } else {
-        content = await file.text()
-        fileName = file.name
+        content = await file.text();
+        fileName = file.name;
       }
 
-      const { entries: rawLogs, warnings, malformedCount } = parseLogFile(content)
-      set({ rawLogs, fileName, parseWarnings: warnings, processingStep: STEPS[1], processingStepIndex: 1 })
+      const {
+        entries: rawLogs,
+        warnings,
+        malformedCount,
+      } = parseLogFile(content);
+      set({
+        rawLogs,
+        fileName,
+        parseWarnings: warnings,
+        processingStep: STEPS[1],
+        processingStepIndex: 1,
+      });
 
-      await tick()
+      await tick();
 
       // ── Step 2: Layer 1 — Signatures ──
-      const layer1Results = runLayer1(rawLogs)
-      set({ layer1Results, processingStep: STEPS[2], processingStepIndex: 2 })
+      const layer1Results = runLayer1(rawLogs);
+      set({ layer1Results, processingStep: STEPS[2], processingStepIndex: 2 });
 
-      await tick()
+      await tick();
 
       // ── Step 3: Layer 2 Phase 1 — Behavioral ──
-      const behavioralResults = runLayer2Behavioral(rawLogs, layer1Results)
-      const ipDiversityRate = getMaxIPDiversityRate(behavioralResults)
-      set({ ipDiversityRate })
+      const behavioralResults = runLayer2Behavioral(rawLogs, layer1Results);
+      const ipDiversityRate = getMaxIPDiversityRate(behavioralResults);
+      set({ ipDiversityRate });
 
       // ── Step 4: Layer 2 Phase 2 — Geo enrichment ──
-      const uniqueIPs = getUniqueIPs(rawLogs)
+      const uniqueIPs = getUniqueIPs(rawLogs);
       set({
         processingStep: `Fetching geo data... (0/${Math.min(uniqueIPs.length, 900)} IPs)`,
         processingStepIndex: 3,
-      })
+      });
 
       const { geoData, limited } = await enrichGeoData(
         uniqueIPs,
@@ -148,105 +181,150 @@ const useCertifyStore = create((set, get) => ({
           set({
             geoEnrichmentProgress: Math.round((current / total) * 100),
             processingStep: `Fetching geo data... (${current}/${total} IPs)`,
-          })
+          });
         },
         isDemoMode,
-        isDemoMode ? MOCK_GEO_DATA : {}
-      )
+        isDemoMode ? MOCK_GEO_DATA : {},
+      );
 
-      set({ geoData, geoLimited: limited, processingStep: STEPS[4], processingStepIndex: 4 })
+      set({
+        geoData,
+        geoLimited: limited,
+        processingStep: STEPS[4],
+        processingStepIndex: 4,
+      });
 
-      await tick()
+      await tick();
 
       // ── Step 5: Layer 2 Phase 3 — Rotation ──
-      const rotationResults = runLayer2Rotation(layer1Results, behavioralResults, geoData)
-      const layer2Results = [...behavioralResults, ...rotationResults]
-      const mitreMappings = getMitreSummary([...layer1Results, ...layer2Results])
+      const rotationResults = runLayer2Rotation(
+        layer1Results,
+        behavioralResults,
+        geoData,
+      );
+      const layer2Results = [...behavioralResults, ...rotationResults];
+      const mitreMappings = getMitreSummary([
+        ...layer1Results,
+        ...layer2Results,
+      ]);
 
-      set({ layer2Results, mitreMappings, processingStep: STEPS[5], processingStepIndex: 5 })
+      set({
+        layer2Results,
+        mitreMappings,
+        processingStep: STEPS[5],
+        processingStepIndex: 5,
+      });
 
-      await tick()
+      await tick();
 
       // ── Step 6: Build JSON summary ──
-      const forensicSummary = buildLayer2Json(rawLogs, layer1Results, layer2Results, geoData)
+      const forensicSummary = buildLayer2Json(
+        rawLogs,
+        layer1Results,
+        layer2Results,
+        geoData,
+      );
 
       // ── Step 7: Generate Playbook ──
-      const playbookActions = generatePlaybook(layer1Results, layer2Results)
+      const playbookActions = generatePlaybook(layer1Results, layer2Results);
 
       set({
         layer2JsonSummary: forensicSummary,
         playbookActions,
         isProcessing: false,
         hasResults: true,
-        processingStep: '',
-        activeTab: 'overview',
-      })
+        processingStep: "",
+        activeTab: "overview",
+      });
     } catch (err) {
-      console.error('Processing failed:', err)
+      console.error("Processing failed:", err);
       set({
         isProcessing: false,
-        processingStep: '',
-      })
-      get().addToast(`Processing error: ${err.message}`, 'error')
+        processingStep: "",
+      });
+      get().addToast(`Processing error: ${err.message}`, "error");
     }
   },
 
   generateCERTInEvidenceAction: async () => {
-    const { layer2JsonSummary, apiKey } = get()
-    if (!layer2JsonSummary) return
+    const { layer2JsonSummary, apiKey } = get();
+    if (!layer2JsonSummary) return;
 
-    set({ isGeneratingEvidence: true, certInEvidence: null })
+    set({ isGeneratingEvidence: true, certInEvidence: null });
     try {
-      const evidence = await generateCERTInEvidence(layer2JsonSummary, apiKey || null)
-      set({ certInEvidence: evidence, isGeneratingEvidence: false })
+      const evidence = await generateCERTInEvidence(
+        layer2JsonSummary,
+        apiKey || null,
+      );
+      set({ certInEvidence: evidence, isGeneratingEvidence: false });
     } catch (err) {
-      set({ isGeneratingEvidence: false })
-      get().addToast(`Evidence generation failed: ${err.message}`, 'error')
+      set({ isGeneratingEvidence: false });
+      get().addToast(`Evidence generation failed: ${err.message}`, "error");
     }
   },
 
   generateNarrativeAction: async () => {
-    const { layer2JsonSummary, apiKey } = get()
-    if (!layer2JsonSummary) return
+    const { layer2JsonSummary, apiKey } = get();
+    if (!layer2JsonSummary) return;
 
-    set({ isGeneratingNarrative: true })
+    set({ isGeneratingNarrative: true });
     try {
-      const narrative = await generateAttackNarrative(layer2JsonSummary, apiKey || null)
-      set({ attackNarrative: narrative, isGeneratingNarrative: false })
+      const narrative = await generateAttackNarrative(
+        layer2JsonSummary,
+        apiKey || null,
+      );
+      set({ attackNarrative: narrative, isGeneratingNarrative: false });
     } catch (err) {
-      set({ isGeneratingNarrative: false })
-      get().addToast(`Narrative generation failed: ${err.message}`, 'error')
+      set({ isGeneratingNarrative: false });
+      get().addToast(`Narrative generation failed: ${err.message}`, "error");
     }
   },
 
   sendCopilotMessage: async (userMessage) => {
-    const { copilotMessages, layer2JsonSummary, apiKey } = get()
-    if (!layer2JsonSummary) return
+    const { copilotMessages, layer2JsonSummary, apiKey } = get();
+    if (!layer2JsonSummary) return;
 
-    const newMessages = [...copilotMessages, { role: 'user', content: userMessage, id: Date.now() }]
-    set({ copilotMessages: newMessages, isCopilotLoading: true })
+    const newMessages = [
+      ...copilotMessages,
+      { role: "user", content: userMessage, id: Date.now() },
+    ];
+    set({ copilotMessages: newMessages, isCopilotLoading: true });
 
     try {
-      const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }))
-      const response = await chatWithCopilot(apiMessages, layer2JsonSummary, apiKey || null)
-      set(state => ({
+      const apiMessages = newMessages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+      const response = await chatWithCopilot(
+        apiMessages,
+        layer2JsonSummary,
+        apiKey || null,
+      );
+      set((state) => ({
         copilotMessages: [
           ...state.copilotMessages,
-          { role: 'assistant', content: response, id: Date.now() + 1 },
+          { role: "assistant", content: response, id: Date.now() + 1 },
         ],
         isCopilotLoading: false,
-      }))
+      }));
     } catch (err) {
-      set({ isCopilotLoading: false })
-      get().addToast(`Copilot error: ${err.message}`, 'error')
+      set({ isCopilotLoading: false });
+      get().addToast(`Copilot error: ${err.message}`, "error");
     }
   },
 
   exportReport: (orgName) => {
     const {
-      mitreMappings, attackNarrative, layer2JsonSummary, fileName, confirmedFindings,
-      rawLogs, layer1Results, layer2Results, geoData
-    } = get()
+      mitreMappings,
+      attackNarrative,
+      layer2JsonSummary,
+      fileName,
+      confirmedFindings,
+      rawLogs,
+      layer1Results,
+      layer2Results,
+      geoData,
+    } = get();
 
     try {
       const incidentId = generateCERTInReport({
@@ -260,15 +338,15 @@ const useCertifyStore = create((set, get) => ({
         attackNarrative,
         layer2JsonSummary,
         confirmedFindings,
-      })
-      get().addToast(`Report downloaded: ${incidentId}`, 'success')
-      return incidentId
+      });
+      get().addToast(`Report downloaded: ${incidentId}`, "success");
+      return incidentId;
     } catch (err) {
-      get().addToast(`Export failed: ${err.message}`, 'error')
-      return null
+      get().addToast(`Export failed: ${err.message}`, "error");
+      return null;
     }
   },
-}))
+}));
 
 // Helper: yield to browser event loop between expensive steps
 function tick() {

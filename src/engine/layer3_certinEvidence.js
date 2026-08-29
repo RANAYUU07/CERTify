@@ -1,6 +1,6 @@
 /**
- * Layer 3 — CERT-In Evidence Generation (Claude API)
- * Sends structured L2 JSON to Claude and gets a 7-section evidence document
+ * Layer 3 — CERT-In Evidence Generation (Groq API)
+ * Sends structured L2 JSON to Groq and gets a 7-section evidence document
  * specifically formatted for CERT-In portal submission.
  */
 
@@ -45,77 +45,79 @@ Rules:
 - The timeline must be numbered chronological entries in order of occurrence
 - certInFields must be ready to copy-paste into the CERT-In portal
 - Do NOT include markdown formatting, backticks, or code fences in your response
-- Return ONLY the raw JSON object, nothing else`
+- Return ONLY the raw JSON object, nothing else`;
+
+const GROQ_MODEL = "openai/gpt-oss-120b";
+
+import { slimLayer2JsonForAI } from "./layer3_ai.js";
 
 /**
- * Generate CERT-In evidence document using Claude API
+ * Generate CERT-In evidence document using Groq API
  * @param {object} layer2Json - structured detection summary
  * @param {string} apiKey - optional API key (uses proxy if not provided)
  * @returns {object} parsed evidence object
  */
 export async function generateCERTInEvidence(layer2Json, apiKey = null) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'anthropic-version': '2023-06-01',
-  }
+  // Slim the payload — full logs can exceed Groq's free-tier 8K TPM cap
+  const slimmed = slimLayer2JsonForAI(layer2Json, 30);
 
-  if (apiKey) {
-    headers['x-api-key'] = apiKey
-  }
+  const headers = { "Content-Type": "application/json" };
+  if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
   const body = {
-    model: 'claude-sonnet-4-20250514',
+    model: GROQ_MODEL,
     max_tokens: 4096,
+    // gpt-oss models on Groq support JSON mode — helps keep output parseable
+    response_format: { type: "json_object" },
     messages: [
-      {
-        role: 'user',
-        content: JSON.stringify(layer2Json),
-      },
+      { role: "system", content: CERTIN_SYSTEM_PROMPT },
+      { role: "user", content: JSON.stringify(slimmed) },
     ],
-    system: CERTIN_SYSTEM_PROMPT,
-  }
+  };
 
   const endpoint = apiKey
-    ? 'https://api.anthropic.com/v1/messages'
-    : '/api/claude'
+    ? "https://api.groq.com/openai/v1/chat/completions"
+    : "/api/groq";
 
   const response = await fetch(endpoint, {
-    method: 'POST',
+    method: "POST",
     headers,
     body: JSON.stringify(body),
-  })
+  });
 
   if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`Claude API error ${response.status}: ${errorText}`)
+    const errorText = await response.text();
+    throw new Error(`Groq API error ${response.status}: ${errorText}`);
   }
 
-  const data = await response.json()
-  const rawContent = data.content?.[0]?.text || ''
+  const data = await response.json();
+  const rawContent = data.choices?.[0]?.message?.content || "";
 
   // Strip markdown code fences if present
   const cleaned = rawContent
-    .replace(/^```(?:json)?\s*/i, '')
-    .replace(/\s*```$/, '')
-    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/, "")
+    .trim();
 
   try {
-    return JSON.parse(cleaned)
+    return JSON.parse(cleaned);
   } catch {
     // If JSON parsing fails, return a structured fallback
     return {
       timeline: rawContent,
       attackPhases: [],
       affectedSystems: layer2Json.affectedEndpoints || [],
-      threatActorAssessment: 'Analysis pending — Claude response was not in expected JSON format.',
+      threatActorAssessment:
+        "Analysis pending — AI response was not in expected JSON format.",
       iocs: { sourceIPs: [], userAgents: [], payloadPatterns: [] },
-      certInCategory: 'Unauthorised Access Attempt',
+      certInCategory: "Unauthorised Access Attempt",
       certInFields: {
-        briefDescription: 'Cyber incident detected via log analysis.',
-        howDetected: 'Automated log analysis using CERTify tool.',
-        impact: 'Impact assessment pending.',
-        actionsTaken: 'Preserve logs, block suspicious IPs, notify security team.',
+        briefDescription: "Cyber incident detected via log analysis.",
+        howDetected: "Automated log analysis using CERTify tool.",
+        impact: "Impact assessment pending.",
+        actionsTaken:
+          "Preserve logs, block suspicious IPs, notify security team.",
       },
-    }
+    };
   }
 }

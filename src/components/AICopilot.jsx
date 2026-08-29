@@ -60,7 +60,7 @@ export default function AICopilot() {
     }
   }
 
-  const hasEnvKey = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY)
+  const hasEnvKey = Boolean(import.meta.env.VITE_GROQ_API_KEY);
   const showKeyHint = !hasEnvKey && !apiKey
 
   return (
@@ -71,7 +71,7 @@ export default function AICopilot() {
           <span className="text-accent">AI</span> COPILOT
         </h2>
         <p className="text-muted-foreground text-sm mt-1">
-          Powered by Claude — ask questions about your threat data
+          Powered by Groq — ask questions about your threat data
         </p>
       </div>
 
@@ -128,7 +128,7 @@ export default function AICopilot() {
                   }`}
                 >
                   {msg.role === 'assistant' && (
-                    <p className="text-xs text-accent tracking-widest uppercase font-bold mb-2">CLAUDE</p>
+                    <p className="text-xs text-accent tracking-widest uppercase font-bold mb-2">GROQ</p>
                   )}
                   <p className="text-base text-foreground leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                   <p className="text-xs text-muted-foreground tracking-widest mt-2">
@@ -141,7 +141,7 @@ export default function AICopilot() {
             {isCopilotLoading && (
               <div className="flex justify-start">
                 <div className="border-2 border-accent/30 bg-background border-l-4 border-l-accent p-4">
-                  <p className="text-xs text-accent tracking-widest uppercase font-bold mb-3">CLAUDE</p>
+                  <p className="text-xs text-accent tracking-widest uppercase font-bold mb-3">GEMINI</p>
                   <LoadingDots />
                   <p className="text-xs text-muted-foreground tracking-widest uppercase mt-3">ANALYZING...</p>
                 </div>

@@ -77,7 +77,7 @@ export default function CERTInEvidence() {
     apiKey, addToast,
   } = useCertifyStore()
 
-  const hasEnvKey = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY)
+  const hasEnvKey = Boolean(import.meta.env.VITE_GROQ_API_KEY);
 
   const copyAll = async () => {
     if (!certInEvidence) return
@@ -203,7 +203,7 @@ Actions Taken: ${certInEvidence.certInFields?.actionsTaken}
               ))}
             </div>
             <p className="text-muted-foreground text-sm uppercase tracking-widest mt-4">
-              Claude is analyzing your threat data...
+              Groq is analyzing your threat data...
             </p>
           </div>
         </div>

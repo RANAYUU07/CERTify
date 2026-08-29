@@ -36,9 +36,11 @@ function MapUpdater({ bounds }) {
   useEffect(() => {
     if (bounds && bounds.length > 0) {
       try {
-        map.invalidateSize() // Also fix before fitting
-        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 8 })
-      } catch {}
+        map.invalidateSize(); // Also fix before fitting
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 8 });
+      } catch (err) {
+        console.warn("AttackMap: failed to fit bounds", err);
+      }
     }
   }, [bounds, map])
   return null
