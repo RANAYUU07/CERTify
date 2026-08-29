@@ -1,16 +1,45 @@
-# React + Vite
+# CERTify
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**AI-powered cyber incident response and CERT-In compliance platform for Indian MSMEs.**
 
-Currently, two official plugins are available:
+CERTify helps small and medium businesses detect, respond to, and report financially-motivated cyberattacks — including ransomware, credential theft, and payment fraud — through a multi-layer detection pipeline, while automating CERT-In compliance reporting.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚩 Problem
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Indian MSMEs are increasingly targeted by cyberattacks that lead directly to financial loss — ransomware, business email compromise, invoice fraud, and credential theft leading to unauthorized transactions. Most MSMEs lack the security tooling, budget, or expertise to detect these threats early or meet CERT-In's mandatory incident reporting requirements.
 
-## Expanding the ESLint configuration
+## 💡 Solution
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+CERTify provides an affordable, easy-to-deploy detection and response layer built specifically for MSMEs — combining rule-based detection, behavioral anomaly detection, and an AI reasoning layer to flag threats early and generate compliance-ready incident reports automatically.
+
+## ✨ Key Features
+
+- **Rule Engine** — signature-based detection of known attack patterns
+- **Behavioral Anomaly Detection** — flags unusual access, login, or transaction behavior
+- **AI Layer (Gemini API)** — contextual analysis and threat classification on top of raw detections
+- **Automated CERT-In Reporting** — generates compliance-ready incident reports
+- **MSME-friendly Dashboard** — simple, non-technical interface for small business owners
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React + Vite
+- **Backend:** Node.js + Express
+- **AI Layer:** Groq API
+
+## 🔗 Links
+
+- **Live Deployment:** [Add deployment link]
+- **Demo Video:** [Add demo video link]
+
+## 👥 Team BoxBox
+
+- Ayush Ranjan
+- Tridibesh Samantroy
+- Adhyyan Goel
+- Samvid Chawla
+
+---
+
+*Built for CodeBuild 1.0 by Team Axioms*
