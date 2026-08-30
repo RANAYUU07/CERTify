@@ -30,7 +30,7 @@ CERTify provides an affordable, easy-to-deploy detection and response layer buil
 
 ## 🔗 Links
 
-- **Live Deployment:** [certify-ten-topaz.vercel.app](https://certify-lime.vercel.app/)
+- **Live Deployment:** [certify-gilt.vercel.app/](https://certify-gilt.vercel.app/)
 
 ## 👥 Team Axioms
 
