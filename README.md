@@ -33,7 +33,7 @@ CERTify provides an affordable, easy-to-deploy detection and response layer buil
 - **Live Deployment:** [certify-ten-topaz.vercel.app](https://certify-lime.vercel.app/)
 - **Demo Video:** [Add demo video link]
 
-## 👥 Team BoxBox
+## 👥 Team Axioms
 
 - Ayush Ranjan
 - Tridibesh Samantroy
